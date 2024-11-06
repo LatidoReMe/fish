@@ -1,14 +1,14 @@
 extends Node2D
 
-@onready var indicator_normal: Sprite2D = $Indicator1
-@onready var indicator_active: Sprite2D = $Indicator2
-@onready var fish_caught: RichTextLabel = $FishCaught
+@onready var indicator_normal: Sprite2D = $CanvasLayer/FullAnchor/BottomCenter/Indicator1
+@onready var indicator_active: Sprite2D = $CanvasLayer/FullAnchor/BottomCenter/Indicator2
+@onready var fish_caught: RichTextLabel = $CanvasLayer/FullAnchor/Center/FishCaught
 #@onready var fisher_stats: Node = $FisherStats
-@onready var level_label: Label = $Level
-@onready var exp_bar: ProgressBar = $EXPBar
-@onready var time: Label = $Time
-@onready var season: Label = $Season
-@onready var hooked_stinger : Sprite2D = $HookedSprite
+@onready var level_label: Label = $CanvasLayer/FullAnchor/TopAnchor/Leveling/Level
+@onready var exp_bar: ProgressBar = $CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP/EXPBar
+@onready var time: Label = $CanvasLayer/FullAnchor/TopAnchor/SeasonTime/Time
+@onready var season: Label = $CanvasLayer/FullAnchor/TopAnchor/SeasonTime/Season
+@onready var hooked_stinger : Sprite2D = $CanvasLayer/FullAnchor/Center/HookedSprite
 
 # Timers
 var fish_spawn_timer: Timer

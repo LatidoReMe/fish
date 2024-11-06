@@ -11,51 +11,77 @@
 [node name="Game Background Node" type="Node2D"]
 script = ExtResource("1_vpjux")
 
-[node name="Fisher" parent="." instance=ExtResource("1_wa21t")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Pond" type="Button" parent="."]
+[node name="ButtonGroup" type="BoxContainer" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -204.0
+offset_top = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ButtonGroup"]
+layout_mode = 2
+
+[node name="PondTutorial" type="RichTextLabel" parent="CanvasLayer/ButtonGroup/VBoxContainer"]
+layout_mode = 2
+text = "Hey! you should try fishing in water instead. Here, grab this pond and drag it over to your fisher!"
+fit_content = true
+script = ExtResource("5_npxem")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/ButtonGroup/VBoxContainer"]
+layout_mode = 2
+
+[node name="Pond" type="Button" parent="CanvasLayer/ButtonGroup/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-offset_left = 1139.0
-offset_top = 690.0
-offset_right = 1279.0
-offset_bottom = 721.0
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 24
 text = "pond"
 script = ExtResource("3_q5j8n")
 
-[node name="Gutscha" type="Button" parent="."]
+[node name="Gutscha" type="Button" parent="CanvasLayer/ButtonGroup/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-offset_left = 997.0
-offset_top = 690.0
-offset_right = 1137.0
-offset_bottom = 721.0
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 24
 action_mode = 0
 text = "Gutscha"
 script = ExtResource("4_8bomr")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(53, 662)
+[node name="Trash" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+
+[node name="Can" type="Sprite2D" parent="CanvasLayer/Trash"]
+position = Vector2(0, -75)
 scale = Vector2(0.147826, 0.147826)
 texture = ExtResource("3_bwfql")
+centered = false
 
-[node name="PondTutorial" type="RichTextLabel" parent="."]
-offset_left = 1048.0
-offset_top = 568.0
-offset_right = 1277.0
-offset_bottom = 670.0
-text = "Hey! you should try fishing in water instead. Here, grab this pond and drag it over to your fisher!"
-script = ExtResource("5_npxem")
+[node name="Fisher" parent="." instance=ExtResource("1_wa21t")]
 
-[node name="CatchingTutorial" type="RichTextLabel" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_left = 668.0
 offset_top = 277.0
-offset_right = 965.0
-offset_bottom = 499.0
+offset_right = 708.0
+offset_bottom = 317.0
+
+[node name="CatchingTutorial" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
 text = "Hey fish. fans! Hope youre ready to fish! make sure to pull the rod in the opposite direction the fish is going using the arrow keys, and holding down to give it a good yank when its tired!
 
 When you hook a fish, press start to start reeling it in!"
 script = ExtResource("6_fp04f")
 
-[connection signal="pressed" from="Pond" to="." method="_on_pond_pressed"]
-[connection signal="pressed" from="Gutscha" to="Gutscha" method="_on_pressed"]
+[connection signal="pressed" from="CanvasLayer/ButtonGroup/VBoxContainer/HBoxContainer/Pond" to="." method="_on_pond_pressed"]
+[connection signal="pressed" from="CanvasLayer/ButtonGroup/VBoxContainer/HBoxContainer/Gutscha" to="CanvasLayer/ButtonGroup/VBoxContainer/HBoxContainer/Gutscha" method="_on_pressed"]
