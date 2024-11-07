@@ -1,13 +1,13 @@
 extends Node2D
 
 var multi : int
-var multi_bonus : Node = null
+@onready var multi_bonus : Node = $CanvasLayer/Control/HBoxContainer/Gutting/MultiBonus
 var multi_bonus_txt : String = "Gut {multi} fish at once to get 1 {prize} guaranteed!"
-var multi_gut : Node = null
+@onready var multi_gut : Node = $CanvasLayer/Control/HBoxContainer/Gutting/MultiGut
 var multi_gut_txt : String = "Gut x{multi}"
 var pity_max : int
 var pity : int
-var pity_bar : Node = null
+@onready var pity_bar : Node = $CanvasLayer/Control/HBoxContainer/PityAndBanners/ProgressBar
 var prize_pool : Array = [
 	"Super Rare", 
 	"Super Fishy Rare", 
@@ -16,10 +16,7 @@ var prize_pool : Array = [
 ]
 
 func _ready() -> void:
-	var single_gut = get_node("CanvasLayer/Control/HBoxContainer/Gutting/SingleGut")
-	multi_gut = get_node("CanvasLayer/Control/HBoxContainer/Gutting/MultiGut")
-	pity_bar = get_node("CanvasLayer/Control/HBoxContainer/PityAndBanners/ProgressBar")
-	multi_bonus = get_node("CanvasLayer/Control/HBoxContainer/Gutting/MultiBonus")
+	var single_gut = $"CanvasLayer/Control/HBoxContainer/Gutting/SingleGut"
 	single_gut.pressed.connect(_gut.bind(true))
 	multi_gut.pressed.connect(_gut.bind(false))
 	_reset_pity()

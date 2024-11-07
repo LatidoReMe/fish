@@ -49,7 +49,7 @@ func _ready():
 	# Display a message if we just left the Fishing Game
 	if Globals.IsFishing:
 		if Globals.FishWasCaught:
-			var format_string := "Caught a {name}! It's about {size}{size_unit}!"
+			var format_string : String= "Caught a {name}! It's about {size}{size_unit}!"
 			fish_caught.text = format_string.format({"name":Globals.DexInstance.tracked_fish.fish_name, "size": snapped(Globals.DexInstance.tracked_fish.current_size,Globals.SizeDecimalPlaces), "size_unit": Globals.DexInstance.tracked_fish.size_unit})
 		else:
 			fish_caught.text = "Looks like that one got away!"
