@@ -1,0 +1,81 @@
+[gd_scene load_steps=5 format=3 uid="uid://b24jd202bvus0"]
+
+[ext_resource type="Script" path="res://Scripts/Logic/exp_bar.gd" id="1_r4h8m"]
+[ext_resource type="Script" path="res://Scripts/Logic/current_exp.gd" id="2_fptlj"]
+[ext_resource type="Script" path="res://Scripts/Logic/required_exp.gd" id="3_wo1iv"]
+[ext_resource type="Script" path="res://Scripts/Logic/Level.gd" id="4_g0wn6"]
+
+[node name="Stats" type="Control"]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Leveling" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_right = 150.0
+offset_bottom = 40.0
+grow_horizontal = 2
+size_flags_horizontal = 6
+
+[node name="EXP" type="HBoxContainer" parent="Leveling"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="EXPBar" type="ProgressBar" parent="Leveling/EXP"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_r4h8m")
+
+[node name="CEXPBox" type="HBoxContainer" parent="Leveling/EXP/EXPBar"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 6.0
+grow_vertical = 2
+alignment = 1
+
+[node name="CurrentEXP" type="Label" parent="Leveling/EXP/EXPBar/CEXPBox"]
+layout_mode = 2
+script = ExtResource("2_fptlj")
+
+[node name="REXPBox" type="HBoxContainer" parent="Leveling/EXP/EXPBar"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="RequiredEXP" type="Label" parent="Leveling/EXP/EXPBar/REXPBox"]
+layout_mode = 2
+horizontal_alignment = 2
+script = ExtResource("3_wo1iv")
+
+[node name="Level" type="Label" parent="Leveling"]
+layout_mode = 2
+horizontal_alignment = 1
+script = ExtResource("4_g0wn6")
+
+[node name="SeasonTime" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(100, 36)
+layout_mode = 1
+offset_right = 100.0
+offset_bottom = 36.0
+size_flags_horizontal = 8
+
+[node name="Season" type="Label" parent="SeasonTime"]
+layout_mode = 2
+text = "Season: "
+
+[node name="Time" type="Label" parent="SeasonTime"]
+layout_mode = 2
+text = "Time: "

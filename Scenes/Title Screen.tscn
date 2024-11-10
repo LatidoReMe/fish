@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8vs5ifvkuo7o"]
+[gd_scene load_steps=4 format=3 uid="uid://b8vs5ifvkuo7o"]
 
-[ext_resource type="Script" path="res://Scripts/Scenes/new_game_button.gd" id="1_dyww7"]
-[ext_resource type="Script" path="res://Scripts/Scenes/quit_button.gd" id="2_5xfiu"]
-[ext_resource type="Script" path="res://Scripts/Music/title_music.gd" id="2_akphk"]
+[ext_resource type="Script" path="res://Scripts/TitleScreen.gd" id="1_d3276"]
+[ext_resource type="AudioStream" uid="uid://dfa7sigc760x0" path="res://Sound/A Fishy Menu Draft 1.mp3" id="4_nj37r"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mw1bu"]
 font_size = 120
@@ -10,6 +9,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="Title Node" type="Node2D"]
+script = ExtResource("1_d3276")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
@@ -44,7 +44,6 @@ size_flags_vertical = 10
 text = "fish."
 label_settings = SubResource("LabelSettings_mw1bu")
 horizontal_alignment = 1
-script = ExtResource("2_akphk")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/BoxContainer"]
 layout_mode = 2
@@ -64,7 +63,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 text = "New Game"
-script = ExtResource("1_dyww7")
 
 [node name="SettingsButton" type="Button" parent="CanvasLayer/Control/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 30)
@@ -79,7 +77,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 text = "Quit"
-script = ExtResource("2_5xfiu")
 
-[connection signal="pressed" from="CanvasLayer/Control/BoxContainer/VBoxContainer/NewGameButton" to="CanvasLayer/Control/BoxContainer/VBoxContainer/NewGameButton" method="_on_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/BoxContainer/VBoxContainer/QuitButton" to="CanvasLayer/Control/BoxContainer/VBoxContainer/QuitButton" method="_on_pressed"]
+[node name="TitleMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_nj37r")
+autoplay = true
+parameters/looping = true

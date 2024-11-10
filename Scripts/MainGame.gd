@@ -9,6 +9,9 @@ extends Node2D
 @onready var time: Label = $CanvasLayer/Stats/SeasonTime/Time
 @onready var season: Label = $CanvasLayer/Stats/SeasonTime/Season
 @onready var hooked_stinger : Sprite2D = $CanvasLayer/Center/HookedSprite
+@onready var gutscha_btn : Button = $CanvasLayer/HBoxContainer/ButtonGroup/VBoxContainer/HBoxContainer/Gutscha
+
+@onready var gutscha : PackedScene = preload("res://Scenes/Gutscha.tscn")
 
 # Timers
 var fish_spawn_timer: Timer
@@ -18,6 +21,13 @@ var caught_message_timer: Timer
 var overlay_layer: CanvasLayer
 
 func _ready():
+	
+	#gutscha button. turn into function
+	gutscha_btn.pressed.connect(
+		Globals._swapSubWindow.bind("GutschaSubWindow", Globals.newSubWindow("Gutscha", gutscha))
+	)
+	print(gutscha_btn.pressed.get_connections())
+
 	# Hide the active indicator at start
 	indicator_normal.visible = true
 	indicator_active.visible = false

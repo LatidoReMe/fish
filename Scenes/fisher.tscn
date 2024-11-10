@@ -1,14 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://buad1dyyyy7aw"]
+[gd_scene load_steps=5 format=3 uid="uid://buad1dyyyy7aw"]
 
 [ext_resource type="Script" path="res://Scripts/Scenes/Fisher.gd" id="1_4qm21"]
-[ext_resource type="Texture2D" uid="uid://1rai4xu0bm1u" path="res://Sprites/Fisher.png" id="1_ieamg"]
-[ext_resource type="Texture2D" uid="uid://dk0pai61bsa1k" path="res://Sprites/FisherAbove1.png" id="2_n4rv7"]
-[ext_resource type="Script" path="res://Scripts/Music/Fisher_waiting_music.gd" id="3_065n4"]
-[ext_resource type="Texture2D" uid="uid://dhakhv7yq24cm" path="res://Sprites/FisherAbove2.png" id="3_tae2p"]
-[ext_resource type="Script" path="res://Scripts/Logic/exp_bar.gd" id="7_8n4rg"]
-[ext_resource type="Script" path="res://Scripts/Logic/Level.gd" id="7_f7ody"]
-[ext_resource type="Script" path="res://Scripts/Logic/current_exp.gd" id="8_eosvr"]
-[ext_resource type="Script" path="res://Scripts/Logic/required_exp.gd" id="9_3qt75"]
+[ext_resource type="PackedScene" uid="uid://b10aaiq8do5d3" path="res://Scenes/fishman.tscn" id="2_0cigm"]
 [ext_resource type="Script" path="res://Scripts/SFX/hooked_sfx.gd" id="10_0todo"]
 [ext_resource type="Texture2D" uid="uid://bwtjcgps2taq" path="res://Sprites/hooked.png" id="10_mxvva"]
 
@@ -32,27 +25,11 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="FisherSprite" type="Sprite2D" parent="CanvasLayer/FullAnchor/BottomCenter"]
-scale = Vector2(0.6, 0.6)
-texture = ExtResource("1_ieamg")
-flip_h = true
-script = ExtResource("3_065n4")
-
-[node name="Indicator1" type="Sprite2D" parent="CanvasLayer/FullAnchor/BottomCenter"]
-position = Vector2(0, -72)
-scale = Vector2(0.503546, 0.460432)
-texture = ExtResource("2_n4rv7")
-
-[node name="Indicator2" type="Sprite2D" parent="CanvasLayer/FullAnchor/BottomCenter"]
-position = Vector2(40, -50)
-scale = Vector2(0.471, 0.5)
-texture = ExtResource("3_tae2p")
+[node name="FisherSprite" parent="CanvasLayer/FullAnchor/BottomCenter" instance=ExtResource("2_0cigm")]
+position = Vector2(-58, -135)
 
 [node name="Center" type="Control" parent="CanvasLayer/FullAnchor"]
 layout_mode = 1
@@ -79,77 +56,4 @@ offset_bottom = 90.0
 texture = ExtResource("10_mxvva")
 script = ExtResource("10_0todo")
 
-[node name="TopAnchor" type="Control" parent="CanvasLayer/FullAnchor"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 40.0
-grow_horizontal = 2
-
-[node name="Leveling" type="VBoxContainer" parent="CanvasLayer/FullAnchor/TopAnchor"]
-custom_minimum_size = Vector2(300, 40)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -150.0
-offset_right = 150.0
-offset_bottom = 40.0
-grow_horizontal = 2
-size_flags_horizontal = 6
-
-[node name="EXP" type="HBoxContainer" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling"]
-layout_mode = 2
-size_flags_vertical = 8
-
-[node name="EXPBar" type="ProgressBar" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP"]
-layout_mode = 2
-size_flags_horizontal = 3
-script = ExtResource("7_8n4rg")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP/EXPBar"]
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 6.0
-grow_vertical = 2
-alignment = 1
-
-[node name="CurrentEXP" type="Label" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP/EXPBar/HBoxContainer"]
-layout_mode = 2
-script = ExtResource("8_eosvr")
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP/EXPBar"]
-layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -1.0
-grow_horizontal = 0
-grow_vertical = 2
-
-[node name="RequiredEXP" type="Label" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling/EXP/EXPBar/HBoxContainer2"]
-layout_mode = 2
-horizontal_alignment = 2
-script = ExtResource("9_3qt75")
-
-[node name="Level" type="Label" parent="CanvasLayer/FullAnchor/TopAnchor/Leveling"]
-layout_mode = 2
-horizontal_alignment = 1
-script = ExtResource("7_f7ody")
-
-[node name="SeasonTime" type="VBoxContainer" parent="CanvasLayer/FullAnchor/TopAnchor"]
-custom_minimum_size = Vector2(100, 36)
-layout_mode = 1
-offset_right = 100.0
-offset_bottom = 36.0
-size_flags_horizontal = 8
-
-[node name="Season" type="Label" parent="CanvasLayer/FullAnchor/TopAnchor/SeasonTime"]
-layout_mode = 2
-text = "Season: "
-
-[node name="Time" type="Label" parent="CanvasLayer/FullAnchor/TopAnchor/SeasonTime"]
-layout_mode = 2
-text = "Time: "
+[editable path="CanvasLayer/FullAnchor/BottomCenter/FisherSprite"]

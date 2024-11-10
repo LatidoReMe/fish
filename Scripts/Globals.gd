@@ -160,6 +160,25 @@ func enforce_min_window_size() -> void:
 		DisplayServer.window_set_size(
 			Vector2i(max(current_size.x, min_window_size.x), max(current_size.y, min_window_size.y))
 		)
+		
+# Subwindow
+@onready var subwindow_scene = preload("res://Scenes/SubWindow.tscn")
+
+func newSubWindow(title : String, scene : PackedScene = null, window : Window = subwindow_scene.instantiate()) -> Window:
+	window.title=title
+	window.name=str(title,"SubWindow")
+	if scene:
+		var node := scene.instantiate()
+		window.add_child(node)
+	return window
+	
+	#adds or remove subWindow to root
+func _swapSubWindow(nodename:String, window) -> void:
+	print(get_node(str(nodename)))
+	if get_node(str(nodename)) == null:
+		add_child(window)
+	else:
+		remove_child(window)
 
 func _ready() -> void:
 	setup_min_window_size()
