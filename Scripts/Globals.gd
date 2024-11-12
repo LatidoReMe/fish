@@ -44,65 +44,43 @@ func set_current_fishing_location(water_type: String):
 func get_current_fishing_location() -> String:
 	return current_fishing_location
 
-# season and time code
-var time_timer: Timer
+# Seasons
+@export var Seasons : Array = [
+	"Spring",
+	"Summer",
+	"Fall",
+	"Winter"
+]
+@export var current_season: String = Seasons[0]
+@export var season_switch: int = 120
+var current_season_val : int  = 0
 var season_timer: Timer
-@export var current_season: String = "spring"
-var current_season_val: int = 0
-var ttime: float = 0.0
-@export var season_switch: int = 1800
-@export var current_time: String = "morning"
-var current_time_val: int = 0
-var stime: float = 0.0
-@export var time_switch: int = 60
-
-enum Seasons {
-	SPRING,
-	SUMMER,
-	FALL,
-	WINTER
-}
-
-enum Times {
-	MORNING,
-	AFTERNOON,
-	EVENING,
-	NIGHT
-}
-
-func update_time() -> void:
-	current_time_val += 1
-	if current_time_val == 4:
-		current_time_val = 0
-	print(current_time_val)
-	match current_time_val:
-		Times.MORNING:
-			current_time = "morning"
-		Times.AFTERNOON:
-			current_time = "afternoon"
-		Times.EVENING:
-			current_time = "evening"
-		Times.NIGHT:
-			current_time = "night"
-	time_timer.start(time_switch)
-	return
 
 func update_season() -> void:
-	current_season_val += 1
-	if current_season_val == 4:
+	current_season_val+=1
+	if current_season_val==Seasons.size():
 		current_season_val = 0
-	print(current_season_val)
-	match current_season_val:
-		Seasons.SPRING:
-			current_season = "spring"
-		Seasons.SUMMER:
-			current_season = "summer"
-		Seasons.FALL:
-			current_season = "fall"
-		Seasons.WINTER:
-			current_season = "winter"
+	current_season=Seasons[current_season_val]
 	season_timer.start(season_switch)
-	return
+
+# Times of day
+@export var Times_Of_Day : Array = [
+	"Morning",
+	"Afternoon",
+	"Evening",
+	"Night"
+]
+@export var current_time: String = "Morning"
+@export var time_switch: int = 60
+var current_time_val : int  = 0
+var time_timer: Timer
+
+func update_time() -> void:
+	current_time_val+=1
+	if current_time_val==Times_Of_Day.size():
+		current_time_val = 0
+	current_time=Times_Of_Day[current_time_val]
+	time_timer.start(time_switch)
 
 # Fisher stats
 @export var fisher_level: int = 1
