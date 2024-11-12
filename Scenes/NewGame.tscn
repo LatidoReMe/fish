@@ -1,0 +1,83 @@
+[gd_scene load_steps=2 format=3 uid="uid://ltesd26mgruc"]
+
+[ext_resource type="Script" path="res://Scripts/NewGame.gd" id="1_bjfje"]
+
+[node name="NewGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bjfje")
+
+[node name="Dialog" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 35.0
+grow_horizontal = 2
+text = "Don't worry. Fishing is for everyone. To ensure that fishing is accessible to all, we've stored away various signatures for fishers like you to borrow. Here's one from the top of the pile."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="FishingLicense" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -35.5
+offset_right = 200.0
+offset_bottom = 35.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="LicenseText" type="Label" parent="FishingLicense"]
+custom_minimum_size = Vector2(400, 36)
+layout_mode = 2
+text = "Universal Fishing License
+Date of Registration: Today
+Reason for Registration: fish.
+Valid until: The end of fish."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FisherName" type="LineEdit" parent="FishingLicense"]
+custom_minimum_size = Vector2(300, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+placeholder_text = "Gill Finley"
+alignment = 1
+max_length = 20
+expand_to_text_length = true
+caret_blink = true
+caret_mid_grapheme = true
+
+[node name="Buttons" type="HFlowContainer" parent="FishingLicense"]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="SignBtn" type="Button" parent="FishingLicense/Buttons"]
+custom_minimum_size = Vector2(180, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Sign Fishing License!"
+autowrap_mode = 3
+
+[node name="RandomName" type="Button" parent="FishingLicense/Buttons"]
+custom_minimum_size = Vector2(100, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "I can't write."
+autowrap_mode = 3

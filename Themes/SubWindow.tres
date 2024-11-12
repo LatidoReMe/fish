@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://du0qeibsm3omk"]
+
+[ext_resource type="StyleBox" uid="uid://ce2b14f2gt31h" path="res://Scenes/SubWindowStyleBox.stylebox" id="1_gamll"]
+
+[resource]
+Window/colors/title_color = Color(0.188235, 0.384314, 0.188235, 1)
+Window/colors/title_outline_modulate = Color(0.0588235, 0.219608, 0.0588235, 1)
+Window/constants/close_h_offset = 20
+Window/constants/close_v_offset = 20
+Window/constants/title_height = 24
+Window/font_sizes/title_font_size = 24
+Window/styles/embedded_border = ExtResource("1_gamll")
+Window/styles/embedded_unfocused_border = ExtResource("1_gamll")
