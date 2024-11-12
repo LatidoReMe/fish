@@ -18,13 +18,6 @@ var caught_message_timer: Timer
 var overlay_layer: CanvasLayer
 
 func _ready():
-	# Hide the active indicator at start
-	indicator_normal.visible = true
-	indicator_active.visible = false
-	
-	# Hide "HOOKED" Stinger on at start
-	hooked_stinger.visible = false
-
 	# Setup fish spawn timer
 	fish_spawn_timer = Timer.new()
 	add_child(fish_spawn_timer)

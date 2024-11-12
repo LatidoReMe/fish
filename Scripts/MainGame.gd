@@ -12,6 +12,7 @@ extends Node2D
 @onready var gutscha_btn : Button = $CanvasLayer/HBoxContainer/ButtonGroup/VBoxContainer/HBoxContainer/Gutscha
 
 @onready var gutscha : PackedScene = preload("res://Scenes/Gutscha.tscn")
+@onready var fishing_scene : PackedScene = preload("res://Scenes/fishing.tscn")
 
 # Timers
 var fish_spawn_timer: Timer
@@ -20,20 +21,12 @@ var caught_message_timer: Timer
 
 var overlay_layer: CanvasLayer
 
-func _ready():
-	
+func _ready():	
 	#gutscha button. turn into function
 	gutscha_btn.pressed.connect(
 		Globals._swapSubWindow.bind("GutschaSubWindow", Globals.newSubWindow("Gutscha", gutscha))
 	)
 	print(gutscha_btn.pressed.get_connections())
-
-	# Hide the active indicator at start
-	indicator_normal.visible = true
-	indicator_active.visible = false
-	
-	# Hide "HOOKED" Stinger on at start
-	hooked_stinger.visible = false
 
 	# Setup fish spawn timer
 	fish_spawn_timer = Timer.new()
@@ -53,9 +46,11 @@ func _ready():
 	caught_message_timer.one_shot = true
 	caught_message_timer.timeout.connect(hide_catch_message)
 
+	Globals.fish_caught.connect(_caught_text)
 	# Start the first fish spawn timer
 	start_fish_timer()
 
+	
 	# Display a message if we just left the Fishing Game
 	if Globals.IsFishing:
 		if Globals.FishWasCaught:
@@ -130,22 +125,29 @@ func try_catch_fish():
 		hooked_stinger.visible = true
 		hooked_stinger._hooked()
 		await get_tree().create_timer(1).timeout
-		var window_scene = preload("res://Scenes/window.tscn")
-		var window = window_scene.instantiate()
-		add_child(window)
-		window.load_scene("res://Scenes/fishing.tscn", "Fishing")
+		print ("not the await...")
+		var fish_window : Window = Globals.newSubWindow("Hook View", fishing_scene)
+		Globals._swapSubWindow("FishingTime", fish_window)
 		indicator_normal.visible = true
 		indicator_active.visible = false
 		hooked_stinger.visible = false
 
 		# Connect the window_closed signal to a method in this scene
-		window.connect("window_closed", Callable(self, "_on_fishing_window_closed"))
+		fish_window.window_closed.connect("_on_fishing_window_closed")
 
+# just use game over here?
 func _on_fishing_window_closed():
 	print("fishing window closed")
 	if not fish_spawn_timer.time_left > 0:
 		start_fish_timer()
+		
+func _on_fish_game_over() -> void:
+	pass
+		
+func _caught_text() -> void:
+	pass
 
+#turn into signal functions later? we don't need per frame
 func _process(delta: float) -> void:
 	var TimeText: String = "Time of Day: {time}"
 	time.text = TimeText.format({"time":Globals.current_time})

@@ -4,7 +4,9 @@ extends Node
 
 @export var DexInstance: Dex = Dex.new().init_data()
 @export var IsFishing: bool = false
-@export var FishWasCaught: bool = false
+signal fish_game_over
+@export var FishWasCaught : bool = false
+signal fish_caught
 @export var fish_array: Array = []
 
 @export var SizeDecimalPlaces: float = 0.1
@@ -40,65 +42,42 @@ func set_current_fishing_location(water_type: String):
 func get_current_fishing_location() -> String:
 	return current_fishing_location
 
-# season and time code
-var time_timer: Timer
+# seasons
 var season_timer: Timer
-@export var current_season: String = "spring"
-var current_season_val: int = 0
-var ttime: float = 0.0
 @export var season_switch: int = 1800
-@export var current_time: String = "morning"
-var current_time_val: int = 0
 var stime: float = 0.0
+
+@export var Seasons: Array[String] = ["Spring", "Summer", "Autumn", "Winter"]
+@export var current_season: String = Seasons[0]
+
+func set_season(season:int=-1):
+	if season!=-1: #for manual setting
+		current_season=Seasons[season]
+	elif current_season==Seasons[Seasons.size()-1]:
+		current_season=Seasons[0]
+	else:
+		current_season=Seasons[Seasons.find(current_season)+1]
+	season_timer.start(season_switch)
+	
+#times of day
+var time_timer: Timer
+var ttime: float = 0.0
 @export var time_switch: int = 60
 
-enum Seasons {
-	SPRING,
-	SUMMER,
-	FALL,
-	WINTER
-}
+@export var Times: Array[String] = ["Morning", "Afternoon", "Evening", "Night"]
+@export var current_time: String = Times[0]
 
-enum Times {
-	MORNING,
-	AFTERNOON,
-	EVENING,
-	NIGHT
-}
-
-func update_time() -> void:
-	current_time_val += 1
-	if current_time_val == 4:
-		current_time_val = 0
-	print(current_time_val)
-	match current_time_val:
-		Times.MORNING:
-			current_time = "morning"
-		Times.AFTERNOON:
-			current_time = "afternoon"
-		Times.EVENING:
-			current_time = "evening"
-		Times.NIGHT:
-			current_time = "night"
+func set_time(time:int=-1):
+	if time!=-1: #for manual setting
+		current_time=Times[time]
+	elif current_time==Times[Times.size()-1]:
+		current_time=Times[0]
+	else:
+		current_time=Times[Times.find(current_time)+1]
 	time_timer.start(time_switch)
-	return
 
-func update_season() -> void:
-	current_season_val += 1
-	if current_season_val == 4:
-		current_season_val = 0
-	print(current_season_val)
-	match current_season_val:
-		Seasons.SPRING:
-			current_season = "spring"
-		Seasons.SUMMER:
-			current_season = "summer"
-		Seasons.FALL:
-			current_season = "fall"
-		Seasons.WINTER:
-			current_season = "winter"
-	season_timer.start(season_switch)
-	return
+# Game Mode States
+@export var idle_mode: bool = false
 
 # Fisher stats
 @export var fisher_level: int = 1
@@ -132,6 +111,16 @@ func level_up() -> void:
 @export var fish_catch_rate: float = 10
 @export var fish_held_catch_rate: float = 12
 @export var base_fish_stamina_drain: float = 50
+@export var min_fish_catching_window: float = 5
+@export var max_fish_catching_window: float = 10
+@export var experience_multiplier: float = 1
+# Idle Game Stats
+@export var idle_min_fish_window: float = 5
+@export var idle_max_fish_window: float = 10
+@export var idle_min_catch_delay: float = 0.5
+@export var idle_max_catch_delay: float = 2
+@export var idle_catch_chance: float = 1
+@export var idle_experience_multiplier: float = 0.25
 
 # Player Stats
 @export var total_fish_caught: int = 0
@@ -160,13 +149,15 @@ func enforce_min_window_size() -> void:
 		DisplayServer.window_set_size(
 			Vector2i(max(current_size.x, min_window_size.x), max(current_size.y, min_window_size.y))
 		)
-		
-# Subwindow
-@onready var subwindow_scene = preload("res://Scenes/SubWindow.tscn")
 
-func newSubWindow(title : String, scene : PackedScene = null, window : Window = subwindow_scene.instantiate()) -> Window:
+func newSubWindow(title : String, scene : PackedScene = null) -> Window:
+	var window=Window.new()
+	window.max_size=Vector2i(1000,1000)
+	window.min_size=min_window_size
+	window.position=Vector2i(50,50)
 	window.title=title
 	window.name=str(title,"SubWindow")
+	window.close_requested.connect(Globals._swapSubWindow.bind(window.name, window))
 	if scene:
 		var node := scene.instantiate()
 		window.add_child(node)
@@ -174,8 +165,7 @@ func newSubWindow(title : String, scene : PackedScene = null, window : Window = 
 	
 	#adds or remove subWindow to root
 func _swapSubWindow(nodename:String, window) -> void:
-	print(get_node(str(nodename)))
-	if get_node(str(nodename)) == null:
+	if get_node_or_null(str(nodename)) == null:
 		add_child(window)
 	else:
 		remove_child(window)
@@ -188,28 +178,14 @@ func _ready() -> void:
 	# Time progression
 	time_timer = Timer.new()
 	time_timer.one_shot = true
-	time_timer.timeout.connect(update_time)
+	time_timer.timeout.connect(set_time)
 	add_child(time_timer)
 	time_timer.start(time_switch)
 	
 	# Season progression
 	season_timer = Timer.new()
 	season_timer.one_shot = true
-	season_timer.timeout.connect(update_season)
-	add_child(season_timer)
-	season_timer.start(season_switch)
-
-	# Time progression
-	time_timer = Timer.new()
-	time_timer.one_shot = true
-	time_timer.timeout.connect(update_time)
-	add_child(time_timer)
-	time_timer.start(time_switch)
-
-	# Season progression
-	season_timer = Timer.new()
-	season_timer.one_shot = true
-	season_timer.timeout.connect(update_season)
+	season_timer.timeout.connect(set_season)
 	add_child(season_timer)
 	season_timer.start(season_switch)
 	

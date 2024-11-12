@@ -46,9 +46,8 @@ func _ready():
 	# Connect to the fish_game_over signal of the fishing scene
 	var fishing_scene = $WindowContent.get_node_or_null("SubViewportContainer/SubViewport/FishingScene")
 	if fishing_scene:
-		fishing_scene.connect("fish_game_over", Callable(self, "_on_fish_game_over"))
+		fishing_scene.fish_game_over.connect(_on_fish_game_over)
 
-	
 	# Connect to viewport size changed signal to handle viewport resizing
 	viewport.size_changed.connect(_on_viewport_size_changed)
 	
@@ -75,7 +74,6 @@ func _ready():
 
 	queue_redraw()
 	add_to_group("game_windows")
-	Globals.connect("fishing_game_over", Callable(self, "request_close"))
 
 func _update_window_size_and_position():
 	# Get current viewport size

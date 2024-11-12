@@ -78,8 +78,12 @@ const HELD_CATCH_MULTIPLIERS: Dictionary = {
 
 signal fish_game_over
 
+func _init() -> void:
+	print("what's wrong")
+
 func _ready():
 	# get a random fish!
+	print("ready?")
 	var fish: Fish = Globals.DexInstance.random_fish()
 	
 	print("Picked Fish: " + fish.fish_name)
@@ -150,11 +154,7 @@ func _process(delta):
 	catch_progress_bar.value = catch_progress
 	
 	if catch_progress >= 100:
-		print("Fish caught!")
-		Globals.FishWasCaught = true
-		Globals.DexInstance.tracked_fish.record_catch(randf() *10, "testing")
-		Globals.gain_experience(calculate_current_EXP(randf() * 1000))
-		emit_game_over()
+		_emit_fish_caught()
 	
 	#Update the rod sprite	
 	update_rod_direction_sprites()
@@ -170,9 +170,17 @@ func _process(delta):
 	
 	update_background_state()
 
-func emit_game_over():
+func _emit_game_over():
 	print("Game over triggered")
 	emit_signal("fish_game_over")
+	
+func _emit_fish_caught() -> void:
+	print("Fish was caught!")
+	emit_signal("fish_caught")
+	Globals.FishWasCaught=true
+	Globals.DexInstance.tracked_fish.record_catch(randf() *10, "testing")
+	Globals.gain_experience(calculate_current_EXP(randf() * 10))
+	_emit_game_over()
 	
 
 func handle_tired_state(delta):

@@ -126,7 +126,7 @@ grow_horizontal = 2
 grow_vertical = 2
 fill_mode = 3
 
-[node name="FishTextLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/MainContent/LeftSide/FishStaminaBar"]
+[node name="FishTextLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/MainContent/LeftSide"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -259,7 +259,7 @@ grow_horizontal = 2
 grow_vertical = 2
 fill_mode = 3
 
-[node name="RodTextLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/MainContent/RightSide/RodHealthBar"]
+[node name="RodTextLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/MainContent/RightSide"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

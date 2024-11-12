@@ -17,10 +17,12 @@ var snap_threshold := 100
 var current_z_index := -25
 static var top_z_index := -25
 
-@onready var panel: Node = get_node("Panel")
-@onready var label: Node = get_node("Panel/Label")
+@onready var panel: Node = get_node("Water")
+@onready var label: Node = get_node("Water/WaterName")
+@onready var drain: Node = get_node("Water/Drain")
 
 func _ready():
+	drain.pressed.connect(_drain)
 	print("Window started at position: ", position)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	initial_size = panel.size
@@ -153,3 +155,6 @@ func _update_label_position():
 	var center_x = (panel_rect.size.x / 2)
 	var center_y = (panel_rect.size.y / 2)
 	label.position = Vector2(center_x - (label_rect.size.x / 2), center_y - (label_rect.size.y / 2))
+	
+func _drain() -> void:
+	queue_free()
