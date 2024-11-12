@@ -232,9 +232,9 @@ func _on_fishing_window_closed():
 
 func _process(delta: float) -> void:
 	var TimeText: String = "Time of Day: {time}"
-	time.text = TimeText.format({"time":Globals.current_time})
+	time.text = TimeText.format({"time":Globals.current_time.capitalize()})
 	var SeasonText: String = "Current Season: {season}"
-	season.text = SeasonText.format({"season": Globals.current_season})
+	season.text = SeasonText.format({"season": Globals.current_season.capitalize()})
 
 func toggle_fishing_mode():
 	update_fishing_mode(not Globals.idle_mode)

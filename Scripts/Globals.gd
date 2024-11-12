@@ -46,10 +46,10 @@ func get_current_fishing_location() -> String:
 
 # Seasons
 @export var Seasons : Array = [
-	"Spring",
-	"Summer",
-	"Fall",
-	"Winter"
+	"spring",
+	"summer",
+	"fall",
+	"winter"
 ]
 @export var current_season: String = Seasons[0]
 @export var season_switch: int = 120
@@ -65,12 +65,12 @@ func update_season() -> void:
 
 # Times of day
 @export var Times_Of_Day : Array = [
-	"Morning",
-	"Afternoon",
-	"Evening",
-	"Night"
+	"morning",
+	"afternoon",
+	"evening",
+	"night"
 ]
-@export var current_time: String = "Morning"
+@export var current_time: String = Times_Of_Day[0]
 @export var time_switch: int = 60
 var current_time_val : int  = 0
 var time_timer: Timer
