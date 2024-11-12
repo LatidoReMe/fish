@@ -17,8 +17,9 @@ var snap_threshold := 100
 var current_z_index := -25
 static var top_z_index := -25
 
-@onready var panel: Node = get_node("Panel")
-@onready var label: Node = get_node("Panel/Label")
+@onready var panel : Panel = $Water
+@onready var label : Label = $Water/WaterName
+@onready var drain : Button = $Water/Drain
 
 var has_cave := false
 var pending_cave_creation := false
@@ -29,6 +30,9 @@ var cave_types := ["Cave", "Cavern", "Crevice"]
 var deep_water_bodies := ["Deep Pond", "Sea", "Ravine", "Abyss", "Well"]
 
 func _ready():
+	# Setup drain (x button)
+	drain.pressed.connect(_drain)
+	
 	print("Window started at position: ", position)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	initial_size = panel.size
@@ -371,3 +375,7 @@ func check_overlaps():
 	if overlapping_count > 0:
 		print("Window '", label.text, "' is overlapping with ", overlapping_count, " other water bodies")
 	return overlapping_count
+
+func _drain() -> void:
+	print("draining ",label.text)
+	queue_free()
