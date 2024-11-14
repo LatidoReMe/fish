@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8he6ep6pujjo"]
+
+[ext_resource type="Script" path="res://Scripts/StatsTimes.gd" id="1_443ti"]
+
+[node name="StatsandTimes" type="Control"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 48.0
+grow_horizontal = 2
+script = ExtResource("1_443ti")
+
+[node name="SeasonTimes" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_right = 60.0
+offset_bottom = 48.0
+size_flags_horizontal = 2
+
+[node name="Season" type="Label" parent="SeasonTimes"]
+layout_mode = 2
+text = "Season: "
+
+[node name="Time" type="Label" parent="SeasonTimes"]
+layout_mode = 2
+text = "Time: "
+
+[node name="FishXP" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_right = 100.0
+offset_bottom = 48.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Level" type="Label" parent="FishXP"]
+layout_mode = 2
+text = "Level {level}"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EXPBar" type="ProgressBar" parent="FishXP"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="RequiredEXP" type="Label" parent="FishXP/EXPBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "?"
+horizontal_alignment = 2
+
+[node name="CurrentEXP" type="Label" parent="FishXP/EXPBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_vertical = 2
+text = "?"

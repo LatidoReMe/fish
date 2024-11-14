@@ -44,7 +44,7 @@ func _ready() -> void:
 	
 #make new save file eventually, goes to game for now
 func _signed_it() -> void:
-	get_tree().change_scene_to_file("res://Scenes/game_background.tscn")
+	get_tree().change_scene_to_file("res://Scenes/Main.tscn")
 
 func _hand_bad() -> void:
 	if not hand_bad:

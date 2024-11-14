@@ -1,0 +1,97 @@
+[gd_scene load_steps=7 format=3 uid="uid://b4n33w5u131ad"]
+
+[ext_resource type="Script" path="res://Scripts/Main.gd" id="1_vpjux"]
+[ext_resource type="PackedScene" uid="uid://buad1dyyyy7aw" path="res://Scenes/fisher.tscn" id="1_wa21t"]
+[ext_resource type="PackedScene" uid="uid://b8he6ep6pujjo" path="res://Scenes/StatsnTimes.tscn" id="2_1ell4"]
+[ext_resource type="Script" path="res://Scripts/Scenes/pond_tutorial.gd" id="5_npxem"]
+[ext_resource type="AudioStream" uid="uid://dc24xxjqecf1m" path="res://Sound/A Fishy Relaxation Draft 1.mp3" id="5_si302"]
+[ext_resource type="Script" path="res://Scripts/Scenes/catching_tutorial.gd" id="6_fp04f"]
+
+[node name="MainGame" type="Node2D"]
+script = ExtResource("1_vpjux")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="FullRect" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StatsandTimes" parent="CanvasLayer/FullRect" instance=ExtResource("2_1ell4")]
+layout_mode = 1
+
+[node name="Fisher" parent="CanvasLayer/FullRect" instance=ExtResource("1_wa21t")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -300.0
+offset_right = 150.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="PondTutorial" type="RichTextLabel" parent="CanvasLayer/FullRect"]
+layout_mode = 0
+offset_left = 1048.0
+offset_top = 568.0
+offset_right = 1277.0
+offset_bottom = 670.0
+text = "Hey! you should try fishing in water instead. Here, grab this pond and drag it over to your fisher!"
+script = ExtResource("5_npxem")
+
+[node name="CatchingTutorial" type="RichTextLabel" parent="CanvasLayer/FullRect"]
+layout_mode = 0
+offset_left = 668.0
+offset_top = 277.0
+offset_right = 965.0
+offset_bottom = 499.0
+text = "Hey fish. fans! Hope youre ready to fish! make sure to pull the rod in the opposite direction the fish is going using the arrow keys, and holding down to give it a good yank when its tired!
+
+When you hook a fish, press start to start reeling it in!"
+script = ExtResource("6_fp04f")
+
+[node name="BtnToolbox" type="HFlowContainer" parent="CanvasLayer/FullRect"]
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1280.0
+offset_top = -36.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 8
+alignment = 2
+
+[node name="IdleBtn" type="CheckButton" parent="CanvasLayer/FullRect/BtnToolbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Idle Mode"
+
+[node name="PondBtn" type="Button" parent="CanvasLayer/FullRect/BtnToolbox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+text = "Pond"
+
+[node name="GutschaBtn" type="Button" parent="CanvasLayer/FullRect/BtnToolbox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+action_mode = 0
+text = "Gutscha"
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_si302")
+autoplay = true
+parameters/looping = true

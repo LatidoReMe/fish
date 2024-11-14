@@ -52,7 +52,7 @@ func get_current_fishing_location() -> String:
 	"winter"
 ]
 @export var current_season: String = Seasons[0]
-@export var season_switch: int = 120
+@export var season_switch: int = 1800
 var current_season_val : int  = 0
 var season_timer: Timer
 
@@ -88,22 +88,26 @@ func update_time() -> void:
 @export var fisher_experience_total: int = 0
 @export var fisher_experience_required: int = 0
 
+signal add_exp
+signal level_up
+
 func get_required_experience(target_level: int) -> int:
 	return round(pow(target_level, 1.8) + target_level * 4 + 100)
 
 func gain_experience(amount: int) -> void:
 	fisher_experience += amount
 	fisher_experience_total += amount
-	while fisher_experience >= fisher_experience_required:
+	if fisher_experience >= fisher_experience_required:
 		print(fisher_experience)
 		print(fisher_experience_required)
-		var keep := fisher_experience - fisher_experience_required
-		fisher_experience = keep
-		level_up()
+		fisher_experience = fisher_experience - fisher_experience_required
+		_level_up()
+	emit_signal("add_exp")
 
-func level_up() -> void:
+func _level_up() -> void:
 	fisher_level += 1
 	fisher_experience_required = get_required_experience(fisher_level + 1)
+	emit_signal("level_up")
 
 # Game Mode States
 @export var idle_mode: bool = false
@@ -142,7 +146,7 @@ func level_up() -> void:
 @export var color_dark: Color = Color.html("#306230")
 @export var color_darkest: Color = Color.html("#0f380f")
 
-# Window Resizing
+# Main Window Resizing
 @export var min_window_size : Vector2i = Vector2i(400, 400)
 
 func setup_min_window_size() -> void:
@@ -176,5 +180,5 @@ func _ready() -> void:
 	add_child(season_timer)
 	season_timer.start(season_switch)
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	enforce_min_window_size()

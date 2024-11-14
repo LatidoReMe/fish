@@ -1,15 +1,12 @@
-extends Node2D
+extends Control
 
 @onready var indicator_normal: Sprite2D = $Indicator1
 @onready var indicator_active: Sprite2D = $Indicator2
 @onready var fish_caught: RichTextLabel = $FishCaught
 #@onready var fisher_stats: Node = $FisherStats
-@onready var level_label: Label = $Level
-@onready var exp_bar: ProgressBar = $EXPBar
-@onready var time: Label = $Time
-@onready var season: Label = $Season
-@onready var hooked_stinger : Sprite2D = $HookedSprite
-@onready var mode_toggle_button: CheckButton = $ModeToggleButton
+@onready var hooked_stinger : TextureRect = $HookedSprite
+
+@onready var fish_scene : PackedScene = preload("res://Scenes/fishing.tscn")
 
 # Timers
 var fish_spawn_timer: Timer
@@ -52,8 +49,6 @@ func _ready():
 	add_child(auto_catch_timer)
 	auto_catch_timer.one_shot = true
 	auto_catch_timer.timeout.connect(auto_catch_fish)
-
-	mode_toggle_button.toggled.connect(on_mode_toggle_button_toggled)
 
 	# Initialize based on current mode (idle or active)
 	update_fishing_mode(Globals.idle_mode)
@@ -99,7 +94,6 @@ func spawn_fish():
 		var catch_delay = randf_range(Globals.idle_min_catch_delay, Globals.idle_max_catch_delay)
 		auto_catch_timer.start(catch_delay)
 	else:
-		# Normal mode behavior
 		catch_window_timer.start(5.0)
 
 func auto_catch_fish():
@@ -122,9 +116,7 @@ func hide_catch_message():
 	fish_caught.visible = false
 
 func _input(event):
-	if event.is_action_pressed("toggle_fishing_mode"):  # You'll need to set this up in your input map
-		toggle_fishing_mode()
-	elif not Globals.idle_mode:  # Only process fishing input in normal mode
+	if not Globals.idle_mode:  # Only process fishing input in normal mode
 		if event.is_action_pressed("ui_accept"):
 			try_catch_fish()
 		elif event.is_action_pressed("ui_click"):
@@ -134,7 +126,7 @@ func _input(event):
 
 func is_click_in_area(click_pos: Vector2) -> bool:
 	# Convert click position to local coordinates if needed
-	var local_pos: Vector2 = to_local(click_pos)
+	var local_pos: Vector2 = indicator_normal.to_local(click_pos)
 
 	# Check if click is within fisher or indicator sprites
 	# You'll need to adjust these based on your sprite sizes
@@ -213,36 +205,24 @@ func try_catch_fish():
 			else:
 				print("No fish caught in idle mode.")
 		else:
+			# using new subwindows for now
 			# Normal mode behavior (unchanged)
-			var window_scene = preload("res://Scenes/window.tscn")
-			var window = window_scene.instantiate()
-			add_child(window)
-			window.load_scene("res://Scenes/fishing.tscn", "Fishing")
-			window.connect("window_closed", Callable(self, "_on_fishing_window_closed"))
+			var _window=SubWindow.new("FishingWindow", "Fishing", fish_scene)
+			_window.close_requested.connect(_on_fishing_window_closed.bind(_window))
+			add_child(_window)
 		
 		indicator_normal.visible = true
 		indicator_active.visible = false
 		if not Globals.idle_mode:
 			hooked_stinger.visible = false
 
-func _on_fishing_window_closed():
+func _on_fishing_window_closed(_window:Window):
+	_window.get_node("Fishing").emit_signal("fish_game_over")
 	print("fishing window closed")
 	if not fish_spawn_timer.time_left > 0:
 		start_fish_timer()
 
-func _process(delta: float) -> void:
-	var TimeText: String = "Time of Day: {time}"
-	time.text = TimeText.format({"time":Globals.current_time.capitalize()})
-	var SeasonText: String = "Current Season: {season}"
-	season.text = SeasonText.format({"season": Globals.current_season.capitalize()})
-
-func toggle_fishing_mode():
-	update_fishing_mode(not Globals.idle_mode)
-
-func update_fishing_mode(new_idle_state: bool):
-	# Update the global state
-	Globals.idle_mode = new_idle_state
-	
+func update_fishing_mode(new_idle_state: bool):	
 	# Reset all timers
 	fish_spawn_timer.stop()
 	catch_window_timer.stop()
@@ -278,12 +258,6 @@ func update_fishing_mode(new_idle_state: bool):
 	
 	# Emit signal for other systems that might need to know about the mode change
 	emit_signal("fishing_mode_changed", Globals.idle_mode)
-
-func on_mode_toggle_button_toggled(button_pressed: bool):
-	if button_pressed:
-		update_fishing_mode(true)
-	else:
-		update_fishing_mode(false)
 
 func _on_fishing_location_changed(_new_location: String):
 	# Reset all relevant timers
