@@ -1,6 +1,8 @@
 extends SubWindow
 class_name WaterWindow
 
+#unneeded functions: bring to top,
+
 var water_bodies: Array[String] = [
   "Pond",
   "Lake",
@@ -11,7 +13,7 @@ var water_bodies: Array[String] = [
 ]
 var cave_types: Array[String] = [
   "Cave",
-  "Cavern",
+  "Cavern", # Note: No fish in dex yet.
   "Crevice"
 ]
 var deep_water_bodies: Array[String] = [
@@ -35,6 +37,7 @@ func _ready() -> void:
   self.close_requested.connect(self.queue_free)
   self.size_changed.connect(_resized)
 
+# find a way to check only on button release instead?
 func _resized() -> void:
   #while mouse pressed down, nothing?
   print("window resized")

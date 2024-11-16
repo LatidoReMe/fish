@@ -208,7 +208,8 @@ func try_catch_fish():
 			# using new subwindows for now
 			# Normal mode behavior (unchanged)
 			var _window=SubWindow.new("FishingWindow", "Fishing", fish_scene)
-			_window.close_requested.connect(_on_fishing_window_closed.bind(_window))
+			_window.close_requested.connect(_fishing_done)
+			Globals.fish_game_over.connect(_fishing_done.bind(_window))
 			add_child(_window)
 		
 		indicator_normal.visible = true
@@ -216,9 +217,15 @@ func try_catch_fish():
 		if not Globals.idle_mode:
 			hooked_stinger.visible = false
 
-func _on_fishing_window_closed(_window:Window):
-	_window.get_node("Fishing").emit_signal("fish_game_over")
-	print("fishing window closed")
+func _fishing_done(_window=null) -> void:
+	if _window!=null:
+		Globals.fish_game_over.disconnect(_fishing_done.bind(_window))
+		_window.emit_signal("close_requested")
+	else:
+		_after_fishing()
+
+func _after_fishing() -> void:
+	print("after fishing")
 	if not fish_spawn_timer.time_left > 0:
 		start_fish_timer()
 

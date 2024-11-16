@@ -1,5 +1,7 @@
 extends Node2D
 
+#game needs to STOP at 100% catch
+
 # Bar nodes
 @onready var rod_health_bar := $CanvasLayer/MarginContainer/VBoxContainer/MainContent/RightSide/RodHealthBar
 @onready var fish_stamina_bar := $CanvasLayer/MarginContainer/VBoxContainer/MainContent/LeftSide/FishStaminaBar
@@ -43,8 +45,8 @@ enum Difficulty { EASY, MEDIUM, HARD, EXTREME }
 var catching_difficulty: int
 
 # Fish state
+@onready var direction_timer : Timer = $DirectionTimer
 var fish_direction: String = "none"  # "left", "right", or "none"
-var direction_timer: Timer
 var is_fish_tired: bool = false
 
 # Difficulty multipliers
@@ -76,8 +78,6 @@ const HELD_CATCH_MULTIPLIERS: Dictionary = {
 	Difficulty.EXTREME: 2.0
 }
 
-signal fish_game_over
-
 func _ready():
 	# get a random fish!
 	var fish: Fish = Globals.DexInstance.random_fish()
@@ -95,8 +95,6 @@ func _ready():
 	catch_progress_bar.value = catch_progress
 	
 	# Setup direction timer with difficulty-based timing
-	direction_timer = Timer.new()
-	add_child(direction_timer)
 	var tracked_fish: Fish = Globals.DexInstance.tracked_fish
 	match tracked_fish.catching_difficulty:
 		Fish.Difficulty.EASY:
@@ -139,10 +137,11 @@ func _process(delta):
 		handle_active_state(delta)
 		
 	# Always increase catch progress
-	var catch_rate: float = fish_catch_rate
-	if Input.is_action_pressed("ui_down"):
-		catch_rate *= HELD_CATCH_MULTIPLIERS[Globals.DexInstance.tracked_fish.catching_difficulty]
-	catch_progress += catch_rate * delta
+	if catch_progress < 100:
+		var catch_rate: float = fish_catch_rate
+		if Input.is_action_pressed("ui_down"):
+			catch_rate *= HELD_CATCH_MULTIPLIERS[Globals.DexInstance.tracked_fish.catching_difficulty]
+		catch_progress += catch_rate * delta
 	
 	# Update all bars
 	rod_health_bar.value = current_rod_health
@@ -151,6 +150,7 @@ func _process(delta):
 	
 	if catch_progress >= 100:
 		print("Fish caught!")
+		#fish caught function
 		Globals.FishWasCaught = true
 		Globals.DexInstance.tracked_fish.record_catch(randf() *10, "testing")
 		Globals.gain_experience(calculate_current_EXP(randf() * 10))
@@ -172,7 +172,7 @@ func _process(delta):
 
 func emit_game_over():
 	print("Game over triggered")
-	emit_signal("fish_game_over")
+	Globals.emit_signal("fish_game_over")
 	
 
 func handle_tired_state(delta):
@@ -231,7 +231,7 @@ func handle_active_state(delta):
 	# Check for rod break
 	if current_rod_health <= 0:
 		#print("Rod broke!")
-		emit_signal("fish_game_over")
+		emit_game_over()
 
 func get_player_direction() -> String:
 	if Input.is_action_pressed("ui_left"):
