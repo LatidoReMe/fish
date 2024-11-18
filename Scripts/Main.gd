@@ -6,6 +6,8 @@ extends Node2D
 @onready var gutscha : PackedScene = preload("res://Scenes/Gutscha.tscn")
 @onready var music : AudioStreamPlayer = $Music
 
+signal toggled_idle_mode
+
 func _ready() -> void:
 	music.set_volume_db(linear_to_db(Globals.MusicVolume))
 	gutscha_btn.pressed.connect(_pressed_window_btn_for_sw.bind("Gutscha", gutscha))
@@ -34,5 +36,6 @@ func _input(event):
 		idle_btn.toggle_mode=(not idle_btn.toggle_mode)
 
 func toggle_idle_mode(toggled:bool=(not Globals.idle_mode)):
+	print("toggling idle mode")
 	Globals.idle_mode = toggled
 	emit_signal("toggled_idle_mode", Globals.idle_mode)

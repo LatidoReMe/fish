@@ -73,9 +73,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 8
 alignment = 2
 
-[node name="IdleBtn" type="CheckButton" parent="CanvasLayer/FullRect/BtnToolbox"]
+[node name="IdleBtn" type="Button" parent="CanvasLayer/FullRect/BtnToolbox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+toggle_mode = true
+keep_pressed_outside = true
 text = "Idle Mode"
 
 [node name="PondBtn" type="Button" parent="CanvasLayer/FullRect/BtnToolbox"]
