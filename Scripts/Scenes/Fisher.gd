@@ -221,7 +221,9 @@ func _fishing_done(_window=null) -> void:
 	if _window!=null:
 		Globals.fish_game_over.disconnect(_fishing_done.bind(_window))
 		_window.emit_signal("close_requested")
+		print("fishing done, window close asked")
 	else:
+		print("fishing done, window closed")
 		_after_fishing()
 
 func _after_fishing() -> void:

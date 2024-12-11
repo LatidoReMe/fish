@@ -1,0 +1,2 @@
+extends SubWindow
+class_name CaveWindow

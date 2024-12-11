@@ -5,21 +5,28 @@ extends Node2D
 @onready var idle_btn : Button = $CanvasLayer/FullRect/BtnToolbox/IdleBtn
 @onready var gutscha : PackedScene = preload("res://Scenes/Gutscha.tscn")
 @onready var music : AudioStreamPlayer = $Music
+var sw_manager : WindowManager #will need to initialize with viewport
 
 signal toggled_idle_mode
 
 func _ready() -> void:
+	sw_manager=WindowManager.new(get_viewport())
+	#add_child(sw_manager)
 	music.set_volume_db(linear_to_db(Globals.MusicVolume))
 	gutscha_btn.pressed.connect(_pressed_window_btn_for_sw.bind("Gutscha", gutscha))
 	pond_btn.pressed.connect(_pressed_pond)
 	idle_btn.toggled.connect(toggle_idle_mode)
+	Globals.waterwindow_in_out.connect(sw_manager.evaluate_windows)
+	Globals.waterwindow_resized.connect(sw_manager.evaluate_windows)
+	Globals.waterwindow_moved.connect(sw_manager.evaluate_windows)
 
 # Pond (WIP)
 func _pressed_pond() -> void:
 	if get_node_or_null("BodyofWater")!=null:
 		get_node("BodyofWater").emit_signal("close_requested")
 	else:
-		var _window=WaterWindow.new("BodyofWater", "Pond", null)
+		var _window=WaterWindow.new()
+		_window.tree_entered.connect(Globals.waterwindow_in_out.emit) #won't trigger if inside waterwindow
 		add_child(_window)
 
 # Subwindows

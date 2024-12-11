@@ -146,11 +146,15 @@ func _level_up() -> void:
 @export var color_dark: Color = Color.html("#306230")
 @export var color_darkest: Color = Color.html("#0f380f")
 
-# Struggling to access in windows, so moved herr for now
+# Struggling to access in windows, so moved here for now
 signal fish_game_over
+signal waterwindow_resized(id,type)
+signal waterwindow_moved
+signal waterwindow_in_out
 
 # Main Window Resizing
 @export var min_window_size : Vector2i = Vector2i(400, 400)
+@export var max_window_size : Vector2i = Vector2i(1920,1080)#generate this per user on boot
 
 func setup_min_window_size() -> void:
 	ProjectSettings.set_setting("display/window/size/min_width", min_window_size.x)

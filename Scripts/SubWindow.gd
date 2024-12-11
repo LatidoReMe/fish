@@ -16,4 +16,4 @@ func _ready() -> void:
 	if scene:
 		var node=scene.instantiate()
 		self.add_child(node)
-	self.close_requested.connect(self.queue_free)
+	close_requested.connect(self.queue_free)
