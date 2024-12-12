@@ -1,10 +1,12 @@
 extends Control
 
+@onready var fisher : Sprite2D = $FisherSprite
 @onready var indicator_normal: Sprite2D = $Indicator1
 @onready var indicator_active: Sprite2D = $Indicator2
 @onready var fish_caught: RichTextLabel = $FishCaught
 #@onready var fisher_stats: Node = $FisherStats
 @onready var hooked_stinger : TextureRect = $HookedSprite
+@onready var cast_btn : Button = $CastBtn
 
 @onready var fish_scene : PackedScene = preload("res://Scenes/fishing.tscn")
 
@@ -19,6 +21,9 @@ var overlay_layer: CanvasLayer
 signal fishing_mode_changed(is_idle: bool)
 
 func _ready():
+	# Casting
+	cast_btn.toggled.connect(_on_cast_toggle)
+
 	# Hide the active indicator at start
 	indicator_normal.visible = true
 	indicator_active.visible = false
@@ -268,7 +273,7 @@ func update_fishing_mode(new_idle_state: bool):
 	# Emit signal for other systems that might need to know about the mode change
 	emit_signal("fishing_mode_changed", Globals.idle_mode)
 
-func _on_fishing_location_changed(_new_location: String):
+func _on_fishing_location_changed(_new_location: String=""):
 	# Reset all relevant timers
 	fish_spawn_timer.stop()
 	catch_window_timer.stop()
@@ -281,3 +286,19 @@ func _on_fishing_location_changed(_new_location: String):
 	
 	# Start a new fish spawn timer
 	start_fish_timer()
+
+func _on_cast_toggle(casting:bool) -> void:
+	if casting:
+		cast_btn.self_modulate=Color(1,1,1,1)
+		fisher.self_modulate=Color(1,1,1,.25)
+		cast_btn.tooltip_text="Click on a body of water to cast your line there."
+		Globals.cast_start.emit()
+	else:
+		# if fishing location not set, air fishing
+		# update tutorial to not be auto-fishing
+		cast_btn.self_modulate=Color.TRANSPARENT
+		fisher.self_modulate=Color(1,1,1,1)
+		cast_btn.tooltip_text="Cast a line"
+		#method to restart fishing
+		Globals.cast_end.emit()
+	

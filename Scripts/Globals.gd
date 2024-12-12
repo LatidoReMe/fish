@@ -146,11 +146,12 @@ func _level_up() -> void:
 @export var color_dark: Color = Color.html("#306230")
 @export var color_darkest: Color = Color.html("#0f380f")
 
-# Struggling to access in windows, so moved here for now
 signal fish_game_over
 signal waterwindow_resized(id,type)
 signal waterwindow_moved
 signal waterwindow_in_out
+signal cast_start
+signal cast_end
 
 # Main Window Resizing
 @export var min_window_size : Vector2i = Vector2i(400, 400)

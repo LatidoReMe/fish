@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://buad1dyyyy7aw"]
+[gd_scene load_steps=11 format=3 uid="uid://buad1dyyyy7aw"]
 
 [ext_resource type="Script" path="res://Scripts/Scenes/Fisher.gd" id="1_4qm21"]
 [ext_resource type="Texture2D" uid="uid://1rai4xu0bm1u" path="res://Sprites/Fisher.png" id="1_ieamg"]
@@ -6,6 +6,14 @@
 [ext_resource type="Texture2D" uid="uid://dhakhv7yq24cm" path="res://Sprites/FisherAbove2.png" id="3_tae2p"]
 [ext_resource type="Script" path="res://Scripts/SFX/hooked_sfx.gd" id="10_0todo"]
 [ext_resource type="Texture2D" uid="uid://bwtjcgps2taq" path="res://Sprites/hooked.png" id="10_mxvva"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7aoat"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_au0bf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mld7o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hkhpr"]
 
 [node name="Fisher" type="Control"]
 custom_minimum_size = Vector2(300, 300)
@@ -44,6 +52,26 @@ z_index = 1
 position = Vector2(145, 140)
 scale = Vector2(0.5, 0.531)
 texture = ExtResource("3_tae2p")
+
+[node name="CastBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 105.0
+offset_top = 160.0
+offset_right = 113.0
+offset_bottom = 168.0
+tooltip_text = "Cast a line!"
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_7aoat")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_au0bf")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_mld7o")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hkhpr")
+toggle_mode = true
+text = "Casting
+"
+autowrap_mode = 3
 
 [node name="FisherSprite" type="Sprite2D" parent="."]
 position = Vector2(145, 200)
