@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://vrpo5ce3j1bc"]
 
 [ext_resource type="Script" path="res://Scripts/WaterWindowScene.gd" id="1_s0424"]
-[ext_resource type="Texture2D" uid="uid://mbl3qhaxgpxe" path="res://Sprites/6framewaterbigg.png" id="2_r104m"]
+[ext_resource type="Texture2D" uid="uid://bexifisidl7w8" path="res://Sprites/6framewaterbigg.png" id="2_r104m"]
 [ext_resource type="Texture2D" uid="uid://dbymi8a7pd0" path="res://Sprites/lil Fish.png" id="3_8k7xm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rjls7"]
@@ -65,7 +65,26 @@ script = ExtResource("1_s0424")
 
 [node name="CL" type="CanvasLayer" parent="."]
 
-[node name="CastingText" type="Label" parent="CL"]
+[node name="CastChoice" type="Button" parent="CL"]
+visible = false
+z_index = 5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_hover_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_focus_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 60
+text = "Cast your line here?"
+flat = true
+autowrap_mode = 3
+
+[node name="CastText" type="Label" parent="CL"]
+visible = false
 z_index = 5
 anchors_preset = 15
 anchor_right = 1.0

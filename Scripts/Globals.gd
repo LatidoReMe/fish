@@ -14,15 +14,18 @@ extends Node
 # Array to store fishing locations and their types
 @export var fishing_locations: Array = []
 @export var current_fishing_location: String = "air"  # Store the current water body type
+@export var amount_of_lines : int = 1 #update based off chosen rod
 
 signal fishing_location_changed(new_location: String)
 
-func add_fishing_location(location: Vector2, water_type: String):
+func add_fishing_location(window=null, water_type: String="Air"):
 	fishing_locations.append({
-		"position": location,
-		"type": water_type
+		"window": window,
+		"type": water_type.to_lower()
 	})
-	print("Added new fishing location: ", water_type, " at ", location)
+	print("Added new fishing location: ", water_type, " from ", window)
+	if fishing_locations.size()>=amount_of_lines:
+		cast_end.emit()
 
 func get_fishing_locations() -> Array:
 	return fishing_locations
@@ -151,6 +154,7 @@ signal waterwindow_resized(id,type)
 signal waterwindow_moved
 signal waterwindow_in_out
 signal cast_start
+signal line_casted(winid, type) #in case we code in dual-wielding
 signal cast_end
 
 # Main Window Resizing

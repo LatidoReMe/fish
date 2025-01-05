@@ -46,7 +46,13 @@ func get_window_count() -> void:
 
 func get_current_data() -> Dictionary:
   var _sw_data : Dictionary = {}
+  var win_type : String
   for _window in viewport.get_embedded_subwindows():
-    _sw_data[_window.get_instance_id()]=[_window.type, _window.size, _window.position]
+    if _window is WaterWindow:
+      win_type=_window.type
+    else:
+      win_type=_window.title
+    _sw_data[_window.get_instance_id()]=[win_type, _window.size, _window.position]
+
   print_rich(_sw_data)
   return _sw_data

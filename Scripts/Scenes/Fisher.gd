@@ -6,15 +6,14 @@ extends Control
 @onready var fish_caught: RichTextLabel = $FishCaught
 #@onready var fisher_stats: Node = $FisherStats
 @onready var hooked_stinger : TextureRect = $HookedSprite
+@onready var hooked_sfx : AudioStreamPlayer = $Hooked
 @onready var cast_btn : Button = $CastBtn
-
+@onready var reel_btn : Button = $ReelBtn
+@onready var fish_spawn_timer: Timer = $SpawnFishTimer
+@onready var catch_window_timer: Timer = $CatchFishTimer
+@onready var caught_message_timer: Timer = $CaughtFishTimer
+@onready var auto_catch_timer: Timer = $IdleCatchTimer
 @onready var fish_scene : PackedScene = preload("res://Scenes/fishing.tscn")
-
-# Timers
-var fish_spawn_timer: Timer
-var catch_window_timer: Timer
-var caught_message_timer: Timer
-var auto_catch_timer: Timer
 
 var overlay_layer: CanvasLayer
 
@@ -22,37 +21,15 @@ signal fishing_mode_changed(is_idle: bool)
 
 func _ready():
 	# Casting
-	cast_btn.toggled.connect(_on_cast_toggle)
+	cast_btn.toggled.connect(on_cast_toggle)
 
-	# Hide the active indicator at start
-	indicator_normal.visible = true
-	indicator_active.visible = false
-	
-	# Hide "HOOKED" Stinger on at start
-	hooked_stinger.visible = false
+	# Active Catching
+	reel_btn.pressed.connect(on_reel)
 
-	# Setup fish spawn timer
-	fish_spawn_timer = Timer.new()
-	add_child(fish_spawn_timer)
-	fish_spawn_timer.one_shot = true  # Timer only runs once
+	#Timers
 	fish_spawn_timer.timeout.connect(spawn_fish)
-
-	# Setup catch window timer
-	catch_window_timer = Timer.new()
-	add_child(catch_window_timer)
-	catch_window_timer.one_shot = true
 	catch_window_timer.timeout.connect(miss_fish)
-
-	# Setup caught timer
-	caught_message_timer = Timer.new()
-	add_child(caught_message_timer)
-	caught_message_timer.one_shot = true
 	caught_message_timer.timeout.connect(hide_catch_message)
-
-	# Setup auto catch timer for idle mode
-	auto_catch_timer = Timer.new()
-	add_child(auto_catch_timer)
-	auto_catch_timer.one_shot = true
 	auto_catch_timer.timeout.connect(auto_catch_fish)
 
 	# Initialize based on current mode (idle or active)
@@ -89,10 +66,19 @@ func start_fish_timer():
 		random_time = randf_range(Globals.min_fish_catching_window, Globals.max_fish_catching_window)
 	fish_spawn_timer.start(random_time)
 
+# Hide/Show nodes related to active fishing
+func toggle_reelables(is_fish:bool=true) -> void:
+	indicator_normal.visible = !is_fish
+	indicator_active.visible = is_fish
+	cast_btn.visible=!is_fish
+	if !Globals.idle_mode:
+		reel_btn.visible=is_fish
+	else:
+		reel_btn.visible=false
+
 func spawn_fish():
 	print("A fish appeared!")
-	indicator_normal.visible = false
-	indicator_active.visible = true
+	toggle_reelables()
 
 	if Globals.idle_mode:
 		# In idle mode, start the auto catch timer with a random delay
@@ -111,8 +97,7 @@ func auto_catch_fish():
 
 func miss_fish():
 	print("Failed to catch the fish!")
-	indicator_normal.visible = true
-	indicator_active.visible = false
+	toggle_reelables(false)
 
 	# Start the next fish spawn timer
 	start_fish_timer()
@@ -120,23 +105,16 @@ func miss_fish():
 func hide_catch_message():
 	fish_caught.visible = false
 
+func on_reel() -> void:
+	print("time to catch...some FISH.")
+	reel_btn.visible=false
+	try_catch_fish()
+
 func _input(event):
+	#if fish_available
 	if not Globals.idle_mode:  # Only process fishing input in normal mode
-		if event.is_action_pressed("ui_accept"):
-			try_catch_fish()
-		elif event.is_action_pressed("ui_click"):
-			if event is InputEventMouseButton:
-				if is_click_in_area(event.position):
-					try_catch_fish()
-
-func is_click_in_area(click_pos: Vector2) -> bool:
-	# Convert click position to local coordinates if needed
-	var local_pos: Vector2 = indicator_normal.to_local(click_pos)
-
-	# Check if click is within fisher or indicator sprites
-	# You'll need to adjust these based on your sprite sizes
-	var click_rect: Rect2 = Rect2(Vector2(-50, -50), Vector2(100, 100))
-	return click_rect.has_point(local_pos)
+		if event.is_action_pressed("ui_accept") or event.is_action_pressed("reel"):
+			on_reel()
 
 func get_random_fish_for_idle():
 	var current_season = Globals.current_season
@@ -171,7 +149,7 @@ func try_catch_fish():
 		
 		if not Globals.idle_mode:
 			hooked_stinger.visible = true
-			hooked_stinger.play_sfx()
+			hooked_sfx.play()
 			await get_tree().create_timer(1).timeout
 		
 		if Globals.idle_mode:
@@ -213,26 +191,21 @@ func try_catch_fish():
 			# using new subwindows for now
 			# Normal mode behavior (unchanged)
 			var _window=SubWindow.new("FishingWindow", "Fishing", fish_scene)
-			_window.close_requested.connect(_fishing_done)
-			Globals.fish_game_over.connect(_fishing_done.bind(_window))
+			Globals.fish_game_over.connect(fishing_done.bind(_window, true))
+			_window.close_requested.connect(fishing_done.bind(_window, false))
 			add_child(_window)
 		
-		indicator_normal.visible = true
-		indicator_active.visible = false
+		toggle_reelables(false)
 		if not Globals.idle_mode:
 			hooked_stinger.visible = false
 
-func _fishing_done(_window=null) -> void:
-	if _window!=null:
-		Globals.fish_game_over.disconnect(_fishing_done.bind(_window))
-		_window.emit_signal("close_requested")
-		print("fishing done, window close asked")
-	else:
-		print("fishing done, window closed")
-		_after_fishing()
-
-func _after_fishing() -> void:
-	print("after fishing")
+# idea: multi-active fishing. connect fishing game scene id?
+func fishing_done(_window, close_window:bool) -> void:
+	Globals.fish_game_over.disconnect(fishing_done.bind(_window))
+	if close_window==true:
+		_window.queue_free()
+		print("fishing window close")
+	print("fishing done")
 	if not fish_spawn_timer.time_left > 0:
 		start_fish_timer()
 
@@ -287,18 +260,19 @@ func _on_fishing_location_changed(_new_location: String=""):
 	# Start a new fish spawn timer
 	start_fish_timer()
 
-func _on_cast_toggle(casting:bool) -> void:
+func on_cast_toggle(casting:bool) -> void:
 	if casting:
-		cast_btn.self_modulate=Color(1,1,1,1)
-		fisher.self_modulate=Color(1,1,1,.25)
-		cast_btn.tooltip_text="Click on a body of water to cast your line there."
+		fisher.self_modulate=Color(1,1,1,.1)
+		cast_btn.tooltip_text="Click on a body of water to cast your line there, or click here again to fish in Air."
 		Globals.cast_start.emit()
 	else:
 		# if fishing location not set, air fishing
 		# update tutorial to not be auto-fishing
-		cast_btn.self_modulate=Color.TRANSPARENT
+		if Globals.fishing_locations.size()==0:
+			Globals.add_fishing_location()
 		fisher.self_modulate=Color(1,1,1,1)
 		cast_btn.tooltip_text="Cast a line"
 		#method to restart fishing
 		Globals.cast_end.emit()
 	
+# TODO: UNPRESS CAST_BTN WHEN HIDDEN

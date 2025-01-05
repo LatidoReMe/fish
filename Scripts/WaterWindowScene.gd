@@ -5,11 +5,17 @@ extends Node
 @onready var cave_btn = $CL/Path2D/PathFollow2D/TextureButton
 @onready var water = $CL/Parallax2D/AnimatedSprite2D
 @onready var pxbg = $CL/Parallax2D
+@onready var cast_btn = $CL/CastChoice
+@onready var cast_txt = $CL/CastText
 @onready var parent_ww : WaterWindow = get_parent()
 @onready var parent_id = parent_ww.get_instance_id()
 
 func _ready() -> void:
   Globals.waterwindow_resized.connect(_on_resize)
+  Globals.cast_start.connect(on_cast_start)
+  Globals.cast_end.connect(on_cast_end)
+  cast_btn.pressed.connect(on_lined)
+
   pxbg.position=get_viewport().get_visible_rect().size/2
   set_bg_pos_repeat()
 
@@ -49,6 +55,18 @@ func set_bg_pos_repeat() -> void:
     pxbg.repeat_times=roundi(get_viewport().size.x/35)
   else:
     pxbg.repeat_times=roundi(get_viewport().size.y/35)
+
+func on_cast_start() -> void:
+  cast_btn.visible=true
+  cast_txt.visible=false
+
+func on_lined() -> void:
+  cast_btn.visible=false
+  cast_txt.visible=true
+  Globals.line_casted.emit(parent_id, parent_ww.type)
+
+func on_cast_end() -> void:
+  cast_btn.visible=false
 
 func _physics_process(delta):
   if cave_btn.visible:
